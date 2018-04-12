@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		823DBD56207F8888002E2B6B /* MGNetworkingErrorExplainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 823DBD55207F8888002E2B6B /* MGNetworkingErrorExplainer.m */; };
+		823DBD5C207F9716002E2B6B /* MGFileUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 823DBD5B207F9716002E2B6B /* MGFileUploader.m */; };
+		823DBD5F207F9723002E2B6B /* MGFileDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 823DBD5E207F9723002E2B6B /* MGFileDownloader.m */; };
+		823DBD65207FA261002E2B6B /* file.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 823DBD64207FA261002E2B6B /* file.jpg */; };
+		823DBD68207FA280002E2B6B /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = 823DBD67207FA280002E2B6B /* File.m */; };
+		823DBD6B207FA898002E2B6B /* FileUploadParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 823DBD6A207FA898002E2B6B /* FileUploadParser.m */; };
 		829FD76A207EF1BA002F3DF0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 829FD769207EF1BA002F3DF0 /* AppDelegate.m */; };
 		829FD76D207EF1BA002F3DF0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 829FD76C207EF1BA002F3DF0 /* ViewController.m */; };
 		829FD770207EF1BA002F3DF0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 829FD76E207EF1BA002F3DF0 /* Main.storyboard */; };
@@ -24,6 +30,18 @@
 		2A6F153AC9C64F825F3CDCD8 /* Pods-MGNetworking.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MGNetworking.release.xcconfig"; path = "Pods/Target Support Files/Pods-MGNetworking/Pods-MGNetworking.release.xcconfig"; sourceTree = "<group>"; };
 		322BA50BA0D84483A9092FE6 /* Pods-MGNetworking.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MGNetworking.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MGNetworking/Pods-MGNetworking.debug.xcconfig"; sourceTree = "<group>"; };
 		6B9318EF45BB957643BE5049 /* libPods-MGNetworking.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MGNetworking.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		823DBD54207F8888002E2B6B /* MGNetworkingErrorExplainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MGNetworkingErrorExplainer.h; sourceTree = "<group>"; };
+		823DBD55207F8888002E2B6B /* MGNetworkingErrorExplainer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MGNetworkingErrorExplainer.m; sourceTree = "<group>"; };
+		823DBD5A207F9716002E2B6B /* MGFileUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MGFileUploader.h; sourceTree = "<group>"; };
+		823DBD5B207F9716002E2B6B /* MGFileUploader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MGFileUploader.m; sourceTree = "<group>"; };
+		823DBD5D207F9723002E2B6B /* MGFileDownloader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MGFileDownloader.h; sourceTree = "<group>"; };
+		823DBD5E207F9723002E2B6B /* MGFileDownloader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MGFileDownloader.m; sourceTree = "<group>"; };
+		823DBD63207F9A41002E2B6B /* MGFileUploadProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MGFileUploadProtocol.h; sourceTree = "<group>"; };
+		823DBD64207FA261002E2B6B /* file.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = file.jpg; sourceTree = "<group>"; };
+		823DBD66207FA280002E2B6B /* File.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
+		823DBD67207FA280002E2B6B /* File.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = File.m; sourceTree = "<group>"; };
+		823DBD69207FA898002E2B6B /* FileUploadParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileUploadParser.h; sourceTree = "<group>"; };
+		823DBD6A207FA898002E2B6B /* FileUploadParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileUploadParser.m; sourceTree = "<group>"; };
 		829FD765207EF1BA002F3DF0 /* MGNetworking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MGNetworking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		829FD768207EF1BA002F3DF0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		829FD769207EF1BA002F3DF0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -104,6 +122,11 @@
 				829FD78D207F5EA5002F3DF0 /* CityParser.m */,
 				829FD790207F611D002F3DF0 /* CityModel.h */,
 				829FD791207F611D002F3DF0 /* CityModel.m */,
+				823DBD66207FA280002E2B6B /* File.h */,
+				823DBD67207FA280002E2B6B /* File.m */,
+				823DBD69207FA898002E2B6B /* FileUploadParser.h */,
+				823DBD6A207FA898002E2B6B /* FileUploadParser.m */,
+				823DBD64207FA261002E2B6B /* file.jpg */,
 				829FD76E207EF1BA002F3DF0 /* Main.storyboard */,
 				829FD771207EF1BC002F3DF0 /* Assets.xcassets */,
 				829FD773207EF1BC002F3DF0 /* LaunchScreen.storyboard */,
@@ -125,10 +148,17 @@
 			isa = PBXGroup;
 			children = (
 				829FD78F207F5F09002F3DF0 /* MGResponseParseProtocol.h */,
+				823DBD63207F9A41002E2B6B /* MGFileUploadProtocol.h */,
 				829FD780207EF786002F3DF0 /* MGHTTPSessionManager.h */,
 				829FD781207EF786002F3DF0 /* MGHTTPSessionManager.m */,
+				823DBD5A207F9716002E2B6B /* MGFileUploader.h */,
+				823DBD5B207F9716002E2B6B /* MGFileUploader.m */,
+				823DBD5D207F9723002E2B6B /* MGFileDownloader.h */,
+				823DBD5E207F9723002E2B6B /* MGFileDownloader.m */,
 				829FD789207F5865002F3DF0 /* MGNetworkingTool.h */,
 				829FD78A207F5865002F3DF0 /* MGNetworkingTool.m */,
+				823DBD54207F8888002E2B6B /* MGNetworkingErrorExplainer.h */,
+				823DBD55207F8888002E2B6B /* MGNetworkingErrorExplainer.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -193,6 +223,7 @@
 			files = (
 				829FD775207EF1BC002F3DF0 /* LaunchScreen.storyboard in Resources */,
 				829FD772207EF1BC002F3DF0 /* Assets.xcassets in Resources */,
+				823DBD65207FA261002E2B6B /* file.jpg in Resources */,
 				829FD770207EF1BA002F3DF0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -227,10 +258,15 @@
 			files = (
 				829FD78B207F5865002F3DF0 /* MGNetworkingTool.m in Sources */,
 				829FD76D207EF1BA002F3DF0 /* ViewController.m in Sources */,
+				823DBD5F207F9723002E2B6B /* MGFileDownloader.m in Sources */,
+				823DBD6B207FA898002E2B6B /* FileUploadParser.m in Sources */,
 				829FD782207EF786002F3DF0 /* MGHTTPSessionManager.m in Sources */,
 				829FD78E207F5EA5002F3DF0 /* CityParser.m in Sources */,
 				829FD792207F611D002F3DF0 /* CityModel.m in Sources */,
+				823DBD56207F8888002E2B6B /* MGNetworkingErrorExplainer.m in Sources */,
 				829FD778207EF1BC002F3DF0 /* main.m in Sources */,
+				823DBD5C207F9716002E2B6B /* MGFileUploader.m in Sources */,
+				823DBD68207FA280002E2B6B /* File.m in Sources */,
 				829FD76A207EF1BA002F3DF0 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

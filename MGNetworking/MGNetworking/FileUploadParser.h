@@ -1,5 +1,5 @@
 //
-//  CityParser.h
+//  FileUploadParser.h
 //  MGNetworking
 //
 //  Created by Mingle on 2018/4/12.
@@ -9,10 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "MGResponseParseProtocol.h"
 
-@interface CityParser : NSObject <MGResponseParseDelegate>
+@interface FileUploadParser : NSObject<MGResponseParseDelegate>
 
 - (NSError *)validate:(id)response;
 - (id)getContent:(id)response;
-//- (Class)modelClass;
 
 @end

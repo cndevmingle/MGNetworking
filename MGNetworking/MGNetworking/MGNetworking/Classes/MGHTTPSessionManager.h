@@ -19,6 +19,11 @@ typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
 };
 
 
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+ 网络请求，缓存回调都是以NSArray返回数据，即使请求本身返回的是NSDictionary，因为缓存可能存在多条的情况
+ */
 @interface MGHTTPSessionManager : NSObject
 
 // ***********************************************************************************************
@@ -30,7 +35,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
 
  @param baseURLString 服务器接口地址
  */
-+ (void)setBaseURLString:(NSString *)baseURLString;
++ (void)setBaseURLString:(nullable NSString *)baseURLString;
 
 /**
  设置超时时间，默认20s
@@ -42,7 +47,21 @@ typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
 /**
  设置返回数据接收类型
  */
-+ (void)setResponseSerializerAcceptableContentTypes:(NSSet<NSString *> *)contentTypes;
++ (void)setResponseSerializerAcceptableContentTypes:(nullable NSSet<NSString *> *)contentTypes;
+
+/**
+ 在错误信息后面显示错误码
+
+ @param showErrCode 是否显示
+ */
++ (void)showErrorCode:(BOOL)showErrCode;
+
+/**
+ 网络请求取消后是否需要回调（默认YES）
+
+ @param need 是否需要
+ */
++ (void)needCancelCallback:(BOOL)need;
 
 /**
  post请求
@@ -55,7 +74,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
 + (void)postWithURLString:(nonnull NSString *)urlString
                    params:(nullable id)params
                   success:(nullable void (^)(id responseObj, bool isCache))success
-                  failure:(nullable void (^)(NSError *error))failure;
+                  failure:(nullable void (^)(NSError *error, BOOL isCancel))failure;
 
 /**
  post请求
@@ -72,7 +91,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
               cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
         responseParser:(nullable id<MGResponseParseDelegate>)parser
                   success:(nullable void (^)(id responseObj, bool isCache))success
-                  failure:(nullable void (^)(NSError *error))failure;
+                  failure:(nullable void (^)(NSError *error, BOOL isCancel))failure;
 
 /**
  get请求
@@ -85,7 +104,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
 + (void)getWithURLString:(nonnull NSString *)urlString
                    params:(nullable id)params
                   success:(nullable void (^)(id responseObj, bool isCache))success
-                  failure:(nullable void (^)(NSError *error))failure;
+                  failure:(nullable void (^)(NSError *error, BOOL isCancel))failure;
 
 /**
  get请求
@@ -102,7 +121,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
               cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
         responseParser:(nullable id<MGResponseParseDelegate>)parser
                   success:(nullable void (^)(id responseObj, bool isCache))success
-                  failure:(nullable void (^)(NSError *error))failure;
+                  failure:(nullable void (^)(NSError *error, BOOL isCancel))failure;
 
 /**
  取消指定的网络接口
@@ -125,7 +144,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
  
  @param baseURLString 服务器接口地址
  */
-- (void)setBaseURLString:(NSString *)baseURLString;
+- (void)setBaseURLString:(nullable NSString *)baseURLString;
 
 /**
  设置超时时间，默认20s
@@ -137,7 +156,21 @@ typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
 /**
  设置返回数据接收类型
  */
-- (void)setResponseSerializerAcceptableContentTypes:(NSSet<NSString *> *)contentTypes;
+- (void)setResponseSerializerAcceptableContentTypes:(nullable NSSet<NSString *> *)contentTypes;
+
+/**
+ 在错误信息后面显示错误码
+ 
+ @param showErrCode 是否显示
+ */
+- (void)showErrorCode:(BOOL)showErrCode;
+
+/**
+ 网络请求取消后是否需要回调（默认YES）
+ 
+ @param need 是否需要
+ */
+- (void)needCancelCallback:(BOOL)need;
 
 /**
  post请求
@@ -150,7 +183,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
 - (void)postWithURLString:(nonnull NSString *)urlString
                    params:(nullable id)params
                   success:(nullable void (^)(id responseObj, bool isCache))success
-                  failure:(nullable void (^)(NSError *error))failure;
+                  failure:(nullable void (^)(NSError *error, BOOL isCancel))failure;
 
 /**
  post请求
@@ -167,7 +200,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
               cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
         responseParser:(nullable id<MGResponseParseDelegate>)parser
                   success:(nullable void (^)(id responseObj, bool isCache))success
-                  failure:(nullable void (^)(NSError *error))failure;
+                  failure:(nullable void (^)(NSError *error, BOOL isCancel))failure;
 
 /**
  get请求
@@ -180,7 +213,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
 - (void)getWithURLString:(nonnull NSString *)urlString
                   params:(nullable id)params
                  success:(nullable void (^)(id responseObj, bool isCache))success
-                 failure:(nullable void (^)(NSError *error))failure;
+                 failure:(nullable void (^)(NSError *error, BOOL isCancel))failure;
 
 /**
  get请求
@@ -197,6 +230,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
              cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
        responseParser:(nullable id<MGResponseParseDelegate>)parser
                  success:(nullable void (^)(id responseObj, bool isCache))success
-                 failure:(nullable void (^)(NSError *error))failure;
+                 failure:(nullable void (^)(NSError *error, BOOL isCancel))failure;
 
 @end
+NS_ASSUME_NONNULL_END

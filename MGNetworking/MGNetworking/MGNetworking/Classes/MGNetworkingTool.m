@@ -33,4 +33,16 @@
     return  output;
 }
 
++ (NSString *)tableNameWithString:(NSString *)string {
+    return [NSString stringWithFormat:@"T_%@", [self md5WithString:string]];
+}
+
++ (NSString *)generateRandomName {
+    NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
+    fmt.dateFormat = @"yyyyMMddHHmmss";
+    NSString *dateString = [fmt stringFromDate:[NSDate date]];
+    NSInteger randomNum = arc4random()%900 + 100;
+    return [self md5WithString:[NSString stringWithFormat:@"%@%@", dateString, @(randomNum)]];
+}
+
 @end
