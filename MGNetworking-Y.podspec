@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  s.name         = "MGNetworking.podspec"
+  s.name         = "MGNetworking-Y.podspec"
   s.version      = "0.0.1"
   s.summary      = "基于AFNetworking封装的网络库，涵盖基本的POST/GET请求，文件上传和下载。"
 
