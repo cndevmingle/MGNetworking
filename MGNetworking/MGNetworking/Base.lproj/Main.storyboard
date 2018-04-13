@@ -6,13 +6,14 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Root View Controller-->
         <scene sceneID="fI6-Li-d8a">
             <objects>
-                <viewController id="gjd-3E-sIf" sceneMemberID="viewController">
+                <viewController id="gjd-3E-sIf" customClass="RootViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="IiL-2G-gG1"/>
                         <viewControllerLayoutGuide type="bottom" id="Jk9-iJ-GeY"/>
@@ -20,21 +21,41 @@
                     <view key="view" contentMode="scaleToFill" id="g5V-YA-quN">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fSo-1I-HWT">
+                                <rect key="frame" x="156" y="92" width="62" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="接口测试"/>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="show" identifier="1" id="POS-n6-OrU"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jiy-z7-q0I">
+                                <rect key="frame" x="156" y="185" width="62" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="上传测试"/>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="show" identifier="2" id="zvh-rM-efE"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iMz-DL-oOM">
+                                <rect key="frame" x="156" y="274" width="62" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="下载测试"/>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="show" identifier="3" id="S6H-lw-eRF"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
-                    <navigationItem key="navigationItem" id="7p6-0A-65g">
-                        <barButtonItem key="rightBarButtonItem" title="Next" id="K1e-Ao-FPo">
-                            <connections>
-                                <segue destination="BYZ-38-t0r" kind="show" id="4As-wj-pbO"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="7p6-0A-65g"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b94-JT-s5O" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="536.79999999999995" y="2.2488755622188905"/>
         </scene>
-        <!--View Controller-->
+        <!--测试-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
@@ -77,13 +98,32 @@
                             <constraint firstItem="eeg-ZI-xSt" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="wcW-Eu-oeI"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="测试" id="BjF-Ai-SMo">
+                        <rightBarButtonItems>
+                            <barButtonItem title="继续" id="4rh-8d-Q4H">
+                                <connections>
+                                    <action selector="resume:" destination="BYZ-38-t0r" id="Rb0-cw-OT9"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="暂停" id="Ee9-Xi-J0K">
+                                <connections>
+                                    <action selector="pause:" destination="BYZ-38-t0r" id="MpB-YJ-ffJ"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="清理" id="lgq-W4-Rki">
+                                <connections>
+                                    <action selector="clean:" destination="BYZ-38-t0r" id="ONc-22-tNW"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
                     <connections>
                         <outlet property="textView" destination="eeg-ZI-xSt" id="V65-B7-gxz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1340" y="34.632683658170919"/>
+            <point key="canvasLocation" x="1462" y="2"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="gS2-Pd-3Z2">
@@ -104,4 +144,7 @@
             <point key="canvasLocation" x="-402.39999999999998" y="2.2488755622188905"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="S6H-lw-eRF"/>
+    </inferredMetricsTieBreakers>
 </document>

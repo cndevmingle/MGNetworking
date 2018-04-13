@@ -12,13 +12,13 @@
 #import <AFNetworking/AFHTTPSessionManager.h>
 #import <MJExtension/MJExtension.h>
 
-/**上传任务*/
-static NSMutableDictionary<NSString *, NSURLSessionTask *> *taskDictionary;
 
 @interface MGFileUploader ()
 
 /**网络请求对象*/
 @property (nonatomic, strong) AFHTTPSessionManager *uploaderManager;
+/**上传任务*/
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSURLSessionTask *> *taskDictionary;
 
 @end
 
@@ -41,8 +41,9 @@ static NSMutableDictionary<NSString *, NSURLSessionTask *> *taskDictionary;
 }
 
 - (void)setup {
+    _responseContentType = [NSSet setWithObject:@"text/html"];
     _needCancelCallback = YES;
-    taskDictionary = [NSMutableDictionary dictionary];
+    _taskDictionary = [NSMutableDictionary dictionary];
     _uploaderManager = [AFHTTPSessionManager manager];
     AFJSONResponseSerializer *jsonRS = [AFJSONResponseSerializer serializer];
     jsonRS.removesKeysWithNullValues = YES;
@@ -58,9 +59,9 @@ static NSMutableDictionary<NSString *, NSURLSessionTask *> *taskDictionary;
                       files:(nonnull NSArray<id<MGFileUploadDelegate>> *)files
                        flag:(nullable NSString *)flag
              responseParser:(nullable id<MGResponseParseDelegate>)parser
-                   progress:(nullable void (^)(NSProgress * _Nonnull))progress
-                    success:(nullable void (^)(id responseObject))success
-                    failure:(nullable void (^)(NSError *error, bool isCancel))failure {
+                   progress:(nullable void (^)(NSProgress * _Nonnull progress, NSString * _Nullable flag))progress
+                    success:(nullable void (^)(id responseObject, NSString * _Nullable flag))success
+                    failure:(nullable void (^)(NSError *error, BOOL isCancel, NSString * _Nullable flag))failure {
     
     NSString *taskKey = flag?:[MGNetworkingTool generateRandomName];
     __weak typeof(self) weakSelf = self;
@@ -70,7 +71,7 @@ static NSMutableDictionary<NSString *, NSURLSessionTask *> *taskDictionary;
         }
     } progress:^(NSProgress * _Nonnull uploadProgress) {
         if (progress) {
-            progress(uploadProgress);
+            progress(uploadProgress, flag);
         }
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSError *error = nil;
@@ -80,7 +81,7 @@ static NSMutableDictionary<NSString *, NSURLSessionTask *> *taskDictionary;
         if (error) { // 后台返回错误信息
             NSError *explainErr = [NSError errorWithDomain:error.domain code:error.code userInfo:@{NSLocalizedFailureReasonErrorKey : [NSString stringWithFormat:@"%@%@%@", error.localizedFailureReason, weakSelf.showErrCode?@" Code:":@"", weakSelf.showErrCode?@(error.code):@""]}];
             if (failure) {
-                failure(explainErr, NO);
+                failure(explainErr, NO, flag);
             }
         } else { // 没有错误
             // 获取内容
@@ -108,28 +109,28 @@ static NSMutableDictionary<NSString *, NSURLSessionTask *> *taskDictionary;
             }
             
             if (success) {
-                success(result?:responseObject);
+                success(result?:responseObject, flag);
             }
         }
-        [taskDictionary removeObjectForKey:taskKey];
+        [weakSelf.taskDictionary removeObjectForKey:taskKey];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (weakSelf.needCancelCallback || error.code != NSURLErrorCancelled) {
             NSError *explainErr = [NSError errorWithDomain:error.domain code:error.code userInfo:@{NSLocalizedFailureReasonErrorKey : [NSString stringWithFormat:@"%@%@%@", [MGNetworkingErrorExplainer errorMessageInChineseWithError:error], weakSelf.showErrCode?@" Code:":@"", weakSelf.showErrCode?@(error.code):@""]}];
             if (failure) {
-                failure(explainErr, explainErr.code == NSURLErrorCancelled);
+                failure(explainErr, explainErr.code == NSURLErrorCancelled, flag);
             }
         }
-        [taskDictionary removeObjectForKey:taskKey];
+        [weakSelf.taskDictionary removeObjectForKey:taskKey];
     }];
-    [taskDictionary setObject:task forKey:taskKey];
+    [weakSelf.taskDictionary setObject:task forKey:taskKey];
 }
 
 - (void)cancelByFlag:(nonnull NSString *)flag {
-    [[taskDictionary objectForKey:flag] cancel];
+    [[_taskDictionary objectForKey:flag] cancel];
 }
 
 + (void)cancelAll {
-    [taskDictionary enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSURLSessionTask * _Nonnull obj, BOOL * _Nonnull stop) {
+    [[MGFileUploader shareInstance].taskDictionary enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSURLSessionTask * _Nonnull obj, BOOL * _Nonnull stop) {
         [obj cancel];
     }];
 }

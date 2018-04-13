@@ -13,6 +13,9 @@
 		823DBD65207FA261002E2B6B /* file.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 823DBD64207FA261002E2B6B /* file.jpg */; };
 		823DBD68207FA280002E2B6B /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = 823DBD67207FA280002E2B6B /* File.m */; };
 		823DBD6B207FA898002E2B6B /* FileUploadParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 823DBD6A207FA898002E2B6B /* FileUploadParser.m */; };
+		828E43C820804E8F0058A52F /* MGDownloadFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 828E43C720804E8F0058A52F /* MGDownloadFile.m */; };
+		828E43CE20805B820058A52F /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 828E43CD20805B820058A52F /* RootViewController.m */; };
+		828E43D1208090210058A52F /* DownloadParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 828E43D0208090210058A52F /* DownloadParser.m */; };
 		829FD76A207EF1BA002F3DF0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 829FD769207EF1BA002F3DF0 /* AppDelegate.m */; };
 		829FD76D207EF1BA002F3DF0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 829FD76C207EF1BA002F3DF0 /* ViewController.m */; };
 		829FD770207EF1BA002F3DF0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 829FD76E207EF1BA002F3DF0 /* Main.storyboard */; };
@@ -42,6 +45,12 @@
 		823DBD67207FA280002E2B6B /* File.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = File.m; sourceTree = "<group>"; };
 		823DBD69207FA898002E2B6B /* FileUploadParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileUploadParser.h; sourceTree = "<group>"; };
 		823DBD6A207FA898002E2B6B /* FileUploadParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileUploadParser.m; sourceTree = "<group>"; };
+		828E43C620804E8F0058A52F /* MGDownloadFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MGDownloadFile.h; sourceTree = "<group>"; };
+		828E43C720804E8F0058A52F /* MGDownloadFile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MGDownloadFile.m; sourceTree = "<group>"; };
+		828E43CC20805B820058A52F /* RootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		828E43CD20805B820058A52F /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		828E43CF208090210058A52F /* DownloadParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DownloadParser.h; sourceTree = "<group>"; };
+		828E43D0208090210058A52F /* DownloadParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DownloadParser.m; sourceTree = "<group>"; };
 		829FD765207EF1BA002F3DF0 /* MGNetworking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MGNetworking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		829FD768207EF1BA002F3DF0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		829FD769207EF1BA002F3DF0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -116,6 +125,8 @@
 				829FD77E207EF771002F3DF0 /* MGNetworking */,
 				829FD768207EF1BA002F3DF0 /* AppDelegate.h */,
 				829FD769207EF1BA002F3DF0 /* AppDelegate.m */,
+				828E43CC20805B820058A52F /* RootViewController.h */,
+				828E43CD20805B820058A52F /* RootViewController.m */,
 				829FD76B207EF1BA002F3DF0 /* ViewController.h */,
 				829FD76C207EF1BA002F3DF0 /* ViewController.m */,
 				829FD78C207F5EA5002F3DF0 /* CityParser.h */,
@@ -126,6 +137,8 @@
 				823DBD67207FA280002E2B6B /* File.m */,
 				823DBD69207FA898002E2B6B /* FileUploadParser.h */,
 				823DBD6A207FA898002E2B6B /* FileUploadParser.m */,
+				828E43CF208090210058A52F /* DownloadParser.h */,
+				828E43D0208090210058A52F /* DownloadParser.m */,
 				823DBD64207FA261002E2B6B /* file.jpg */,
 				829FD76E207EF1BA002F3DF0 /* Main.storyboard */,
 				829FD771207EF1BC002F3DF0 /* Assets.xcassets */,
@@ -155,6 +168,8 @@
 				823DBD5B207F9716002E2B6B /* MGFileUploader.m */,
 				823DBD5D207F9723002E2B6B /* MGFileDownloader.h */,
 				823DBD5E207F9723002E2B6B /* MGFileDownloader.m */,
+				828E43C620804E8F0058A52F /* MGDownloadFile.h */,
+				828E43C720804E8F0058A52F /* MGDownloadFile.m */,
 				829FD789207F5865002F3DF0 /* MGNetworkingTool.h */,
 				829FD78A207F5865002F3DF0 /* MGNetworkingTool.m */,
 				823DBD54207F8888002E2B6B /* MGNetworkingErrorExplainer.h */,
@@ -264,8 +279,11 @@
 				829FD78E207F5EA5002F3DF0 /* CityParser.m in Sources */,
 				829FD792207F611D002F3DF0 /* CityModel.m in Sources */,
 				823DBD56207F8888002E2B6B /* MGNetworkingErrorExplainer.m in Sources */,
+				828E43CE20805B820058A52F /* RootViewController.m in Sources */,
 				829FD778207EF1BC002F3DF0 /* main.m in Sources */,
 				823DBD5C207F9716002E2B6B /* MGFileUploader.m in Sources */,
+				828E43C820804E8F0058A52F /* MGDownloadFile.m in Sources */,
+				828E43D1208090210058A52F /* DownloadParser.m in Sources */,
 				823DBD68207FA280002E2B6B /* File.m in Sources */,
 				829FD76A207EF1BA002F3DF0 /* AppDelegate.m in Sources */,
 			);

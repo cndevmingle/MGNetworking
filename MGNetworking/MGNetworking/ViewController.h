@@ -10,6 +10,8 @@
 
 @interface ViewController : UIViewController
 
+/**测试类型*/
+@property (nonatomic, assign) NSInteger type;
 
 @end
 

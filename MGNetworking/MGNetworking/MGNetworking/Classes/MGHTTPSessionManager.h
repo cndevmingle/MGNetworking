@@ -47,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  设置返回数据接收类型
  */
-+ (void)setResponseSerializerAcceptableContentTypes:(nullable NSSet<NSString *> *)contentTypes;
++ (void)setResponseContentTypes:(nullable NSSet<NSString *> *)contentTypes;
 
 /**
  在错误信息后面显示错误码
@@ -156,7 +156,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  设置返回数据接收类型
  */
-- (void)setResponseSerializerAcceptableContentTypes:(nullable NSSet<NSString *> *)contentTypes;
+- (void)setResponseContentTypes:(nullable NSSet<NSString *> *)contentTypes;
 
 /**
  在错误信息后面显示错误码

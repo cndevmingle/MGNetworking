@@ -20,6 +20,8 @@
  */
 - (NSError *)validate:(id)response;
 
+@optional
+
 /**
  从返回数据中获取内容
  
@@ -27,8 +29,6 @@
  @return 内容
  */
 - (id)getContent:(id)response;
-
-@optional
 
 /**
  内容模型的类

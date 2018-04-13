@@ -13,12 +13,6 @@
 #import <YTKKeyValueStore/YTKKeyValueStore.h>
 #import <MJExtension/MJExtension.h>
 
-
-/// 静态实例
-static MGHTTPSessionManager *networking;
-/// 静态任务字典
-static NSMutableDictionary<NSString *, NSURLSessionTask *> *taskDictionary;
-
 typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
     MGNetworkingPost,
     MGNetworkingGet
@@ -26,12 +20,14 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 
 @interface MGHTTPSessionManager ()
 
+/**任务字典*/
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSURLSessionTask *> *taskDictionary;
 /**超时时间*/
 @property (nonatomic, assign) NSTimeInterval timeout;
 /**基本地址*/
 @property (nonatomic, copy) NSString *baseURLString;
 /**数据接收类型*/
-@property (nonatomic, strong) NSSet<NSString *> *contentTypes;
+@property (nonatomic, strong) NSSet<NSString *> *responseContentType;
 /**缓存管理*/
 @property (nonatomic, strong) YTKKeyValueStore *store;
 /**是否显示错误码*/
@@ -43,17 +39,12 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 
 @implementation MGHTTPSessionManager
 
-+ (void)load {
-    // 创建单例
-    [self shareInstance];
-}
-
 #pragma mark - 创建单例
 + (instancetype)shareInstance {
+    static MGHTTPSessionManager *networking;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         networking = [[MGHTTPSessionManager alloc] init];
-        taskDictionary = [[NSMutableDictionary alloc] init];
     });
     return networking;
 }
@@ -68,6 +59,10 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 #pragma mark - 初始化配置信息
 - (void)setup {
     
+    _taskDictionary = [[NSMutableDictionary alloc] init];
+    
+    _responseContentType = [NSSet setWithObject:@"text/html"];
+    
     _needCancelCallback = YES;
     
     _showErrCode = NO;
@@ -75,37 +70,55 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
     _timeout = 20;
     
     // 设置缓存信息
-    _store = [[YTKKeyValueStore alloc] initDBWithName:kMGNetworkingCacheDBName];
+    [self createCacheDirectory];
+    _store = [[YTKKeyValueStore alloc] initWithDBWithPath:KMGNetworkingCachePath];
+}
+
+- (NSString *)createCacheDirectory {
+    NSString *cacheDirPath = [KMGNetworkingCachePath stringByDeletingLastPathComponent];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL isDir = NO;
+    BOOL exists = [fileManager fileExistsAtPath:cacheDirPath isDirectory:&isDir];
+    if (!exists || !isDir) {
+        NSError *error = nil;
+        [fileManager createDirectoryAtPath:cacheDirPath withIntermediateDirectories:YES attributes:nil error:&error];
+#if DEBUG
+        if (error) {
+            NSLog(@"创建缓存目录失败：%@\n%s\nLine:%@", cacheDirPath, __FUNCTION__, @(__LINE__));
+        }
+#endif
+    }
+    return cacheDirPath;
 }
 
 + (AFHTTPSessionManager *)createHttpSessionManager {
-    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:networking.baseURLString?[NSURL URLWithString:networking.baseURLString]:nil];
-    manager.requestSerializer.timeoutInterval = networking.timeout;
+    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:[MGHTTPSessionManager shareInstance].baseURLString?[NSURL URLWithString:[MGHTTPSessionManager shareInstance].baseURLString]:nil];
+    manager.requestSerializer.timeoutInterval = [MGHTTPSessionManager shareInstance].timeout;
     AFJSONResponseSerializer *jsonRS = [AFJSONResponseSerializer serializer];
     jsonRS.removesKeysWithNullValues = YES;
-    jsonRS.acceptableContentTypes = networking.contentTypes;
+    jsonRS.acceptableContentTypes = [MGHTTPSessionManager shareInstance].responseContentType;
     manager.responseSerializer = jsonRS;
     return manager;
 }
 
 + (void)setTimeout:(NSTimeInterval)timeout {
-    networking.timeout = timeout;
+    [MGHTTPSessionManager shareInstance].timeout = timeout;
 }
 
 + (void)setBaseURLString:(NSString *)baseURLString {
-    networking.baseURLString = baseURLString;
+    [MGHTTPSessionManager shareInstance].baseURLString = baseURLString;
 }
 
 + (void)showErrorCode:(BOOL)showErrCode {
-    networking.showErrCode = showErrCode;
+    [MGHTTPSessionManager shareInstance].showErrCode = showErrCode;
 }
 
 + (void)needCancelCallback:(BOOL)need {
-    networking.needCancelCallback = need;
+    [MGHTTPSessionManager shareInstance].needCancelCallback = need;
 }
 
-+ (void)setResponseSerializerAcceptableContentTypes:(NSSet<NSString *> *)contentTypes {
-    networking.contentTypes = contentTypes;
++ (void)setResponseContentTypes:(NSSet<NSString *> *)contentTypes {
+    [MGHTTPSessionManager shareInstance].responseContentType = contentTypes;
 }
 
 + (void)postWithURLString:(NSString *)urlString
@@ -114,7 +127,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
         responseParser:(id<MGResponseParseDelegate>)parser
                   success:(void (^)(id, bool))success
                   failure:(void (^)(NSError *, BOOL))failure {
-    [networking requestWithURLString:urlString params:params method:MGNetworkingPost cachePolicy:cachePolicy responseParser:parser success:success failure:failure];
+    [[MGHTTPSessionManager shareInstance] requestWithURLString:urlString params:params method:MGNetworkingPost cachePolicy:cachePolicy responseParser:parser success:success failure:failure];
 }
 
 + (void)postWithURLString:(NSString *)urlString params:(id)params success:(void (^)(id, bool))success failure:(void (^)(NSError *, BOOL))failure {
@@ -122,7 +135,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 }
 
 + (void)getWithURLString:(NSString *)urlString params:(id)params cachePolicy:(MGNetworkingCahchePolicy)cachePolicy responseParser:(id<MGResponseParseDelegate>)parser success:(void (^)(id, bool))success failure:(void (^)(NSError *, BOOL))failure {
-    [networking requestWithURLString:urlString params:params method:MGNetworkingGet cachePolicy:cachePolicy responseParser:parser success:success failure:failure];
+    [[MGHTTPSessionManager shareInstance] requestWithURLString:urlString params:params method:MGNetworkingGet cachePolicy:cachePolicy responseParser:parser success:success failure:failure];
 }
 
 + (void)getWithURLString:(NSString *)urlString params:(id)params success:(void (^)(id, bool))success failure:(void (^)(NSError *, BOOL))failure {
@@ -141,11 +154,11 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
     NSString *cacheTableName = [MGNetworkingTool tableNameWithString:urlString];
     NSString *cacheId = [MGNetworkingTool md5WithString:[params mj_JSONString]];
     if (cachePolicy != MGNetworkingCahchePolicyNone && urlString) {
-        [networking.store createTableWithName:cacheTableName];
+        [[MGHTTPSessionManager shareInstance].store createTableWithName:cacheTableName];
     }
     
     // 查询缓存并返回
-    id cache = [networking cacheInTable:cacheTableName modelClass:[parser respondsToSelector:@selector(modelClass)]?parser.modelClass:nil];
+    id cache = [[MGHTTPSessionManager shareInstance] cacheInTable:cacheTableName modelClass:[parser respondsToSelector:@selector(modelClass)]?parser.modelClass:nil];
     if (cache) {
         if (success) {
             success(cache, YES);
@@ -198,7 +211,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
             switch (cachePolicy) {
                 case MGNetworkingCahchePolicyRefresh:
                     // 刷新缓存，删除旧缓存数据
-                    [networking.store clearTable:cacheTableName];
+                    [[MGHTTPSessionManager shareInstance].store clearTable:cacheTableName];
                     needCache = YES;
                     break;
                 case MGNetworkingCahchePolicyAppend:
@@ -215,7 +228,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
             }
             
         }
-        [taskDictionary  removeObjectForKey:cacheTableName];
+        [weakSelf.taskDictionary  removeObjectForKey:cacheTableName];
     };
     
     void (^failureBlock)(NSURLSessionTask *, NSError *) = ^(NSURLSessionTask * _Nullable task, NSError * _Nullable error) {
@@ -225,7 +238,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
                 failure(explainErr, explainErr.code == NSURLErrorCancelled);
             }
         }
-        [taskDictionary  removeObjectForKey:cacheTableName];
+        [weakSelf.taskDictionary  removeObjectForKey:cacheTableName];
     };
     AFHTTPSessionManager *manager = [MGHTTPSessionManager createHttpSessionManager];
     NSURLSessionTask *task;
@@ -234,16 +247,16 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
     } else {
         task = [manager GET:urlString parameters:params progress:nil success:requestSuccessBlock failure:failureBlock];
     }
-    [taskDictionary setObject:task forKey:cacheTableName];
+    [weakSelf.taskDictionary setObject:task forKey:cacheTableName];
 }
 
 #pragma mark - 取消网络请求
 + (void)cancelByURLString:(NSString *)urlString {
-    [[taskDictionary objectForKey:[MGNetworkingTool tableNameWithString:urlString]] cancel];
+    [[[MGHTTPSessionManager shareInstance].taskDictionary objectForKey:[MGNetworkingTool tableNameWithString:urlString]] cancel];
 }
 
 + (void)cancelAll {
-    [taskDictionary enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSURLSessionTask * _Nonnull obj, BOOL * _Nonnull stop) {
+    [[MGHTTPSessionManager shareInstance].taskDictionary enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSURLSessionTask * _Nonnull obj, BOOL * _Nonnull stop) {
         [obj cancel];
     }];
 }
@@ -278,8 +291,8 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 /**
  设置返回数据接收类型
  */
-- (void)setResponseSerializerAcceptableContentTypes:(NSSet<NSString *> *)contentTypes {
-    _contentTypes = contentTypes;
+- (void)setResponseContentTypes:(NSSet<NSString *> *)contentTypes {
+    _responseContentType = contentTypes;
 }
 
 /**
@@ -352,7 +365,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 
 #pragma mark - 查询缓存
 - (id)cacheInTable:(NSString *)table modelClass:(Class)modelClass {
-    NSArray<YTKKeyValueItem *> *cacheArr = [networking.store getAllItemsFromTable:table];
+    NSArray<YTKKeyValueItem *> *cacheArr = [[MGHTTPSessionManager shareInstance].store getAllItemsFromTable:table];
     if (cacheArr.count == 0) {
         return nil;
     }
@@ -387,7 +400,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 
 #pragma mark - 缓存数据
 + (void)cacheContent:(id)content cacheId:(NSString *)cacheId inTable:(NSString *)table {
-    [networking.store putString:[content mj_JSONString] withId:cacheId intoTable:table];
+    [[MGHTTPSessionManager shareInstance].store putString:[content mj_JSONString] withId:cacheId intoTable:table];
 }
 
 @end
