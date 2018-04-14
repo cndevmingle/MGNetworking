@@ -134,7 +134,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
     [self postWithURLString:urlString params:params cachePolicy:MGNetworkingCahchePolicyNone responseParser:nil success:success failure:failure];
 }
 
-+ (void)getWithURLString:(NSString *)urlString params:(id)params cachePolicy:(MGNetworkingCahchePolicy)cachePolicy responseParser:(id<MGResponseParseDelegate>)parser success:(void (^)(id, bool))success failure:(void (^)(NSError *, BOOL))failure {
++ (void)getWithURLString:(NSString *)urlString params:(id)params cachePolicy:(MGNetworkingCahchePolicy)cachePolicy responseParser:(Class<MGResponseParseDelegate>)parser success:(void (^)(id, bool))success failure:(void (^)(NSError *, BOOL))failure {
     [[MGHTTPSessionManager shareInstance] requestWithURLString:urlString params:params method:MGNetworkingGet cachePolicy:cachePolicy responseParser:parser success:success failure:failure];
 }
 
@@ -147,7 +147,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
                    params:(nullable id)params
                       method:(MGNetworkingMethod)method
               cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
-        responseParser:(nullable id<MGResponseParseDelegate>)parser
+        responseParser:(nullable Class<MGResponseParseDelegate>)parser
                   success:(nullable void (^)(id responseObj, bool isCache))success
                   failure:(nullable void (^)(NSError *error, BOOL isCancel))failure {
     // 创建缓存表
@@ -323,7 +323,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 - (void)postWithURLString:(nonnull NSString *)urlString
                    params:(nullable id)params
               cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
-        responseParser:(nullable id<MGResponseParseDelegate>)parser
+        responseParser:(nullable Class<MGResponseParseDelegate>)parser
                   success:(nullable void (^)(id responseObj, bool isCache))success
                   failure:(nullable void (^)(NSError *error, BOOL isCancel))failure {
     [self requestWithURLString:urlString params:params method:MGNetworkingPost cachePolicy:cachePolicy responseParser:parser success:success failure:failure];
@@ -357,7 +357,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 - (void)getWithURLString:(nonnull NSString *)urlString
                   params:(nullable id)params
              cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
-       responseParser:(nullable id<MGResponseParseDelegate>)parser
+       responseParser:(nullable Class<MGResponseParseDelegate>)parser
                  success:(nullable void (^)(id responseObj, bool isCache))success
                  failure:(nullable void (^)(NSError *error, BOOL isCancel))failure {
     [self requestWithURLString:urlString params:params method:MGNetworkingGet cachePolicy:cachePolicy responseParser:parser success:success failure:failure];
