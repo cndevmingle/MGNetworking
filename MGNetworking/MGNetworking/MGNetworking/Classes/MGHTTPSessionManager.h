@@ -89,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)postWithURLString:(nonnull NSString *)urlString
                    params:(nullable id)params
               cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
-        responseParser:(nullable id<MGResponseParseDelegate>)parser
+        responseParser:(nullable Class<MGResponseParseDelegate>)parser
                   success:(nullable void (^)(id responseObj, bool isCache))success
                   failure:(nullable void (^)(NSError *error, BOOL isCancel))failure;
 

@@ -124,7 +124,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 + (void)postWithURLString:(NSString *)urlString
                    params:(id)params
               cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
-        responseParser:(id<MGResponseParseDelegate>)parser
+        responseParser:(Class<MGResponseParseDelegate>)parser
                   success:(void (^)(id, bool))success
                   failure:(void (^)(NSError *, BOOL))failure {
     [[MGHTTPSessionManager shareInstance] requestWithURLString:urlString params:params method:MGNetworkingPost cachePolicy:cachePolicy responseParser:parser success:success failure:failure];
@@ -158,7 +158,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
     }
     
     // 查询缓存并返回
-    id cache = [[MGHTTPSessionManager shareInstance] cacheInTable:cacheTableName modelClass:[parser respondsToSelector:@selector(modelClass)]?parser.modelClass:nil];
+    id cache = [[MGHTTPSessionManager shareInstance] cacheInTable:cacheTableName modelClass:[parser respondsToSelector:@selector(modelClass)]?[parser modelClass]:nil];
     if (cache) {
         if (success) {
             success(cache, YES);
@@ -190,11 +190,11 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
             id result = nil;
             if ([parser respondsToSelector:@selector(modelClass)]) {
                 if ([content isKindOfClass:[NSArray class]]) {
-                    result = [parser.modelClass mj_objectArrayWithKeyValuesArray:content];
+                    result = [[parser modelClass] mj_objectArrayWithKeyValuesArray:content];
                 } else if ([content isKindOfClass:[NSDictionary class]]) {
-                    result = [parser.modelClass mj_objectWithKeyValues:content];
+                    result = [[parser modelClass] mj_objectWithKeyValues:content];
                 } else if ([content isKindOfClass:[NSString class]] || [content isKindOfClass:[NSData class]]) {
-                    result = [parser.modelClass mj_objectWithKeyValues:[content mj_JSONObject]];
+                    result = [[parser modelClass] mj_objectWithKeyValues:[content mj_JSONObject]];
                 } else {
                     result = content;
                 }

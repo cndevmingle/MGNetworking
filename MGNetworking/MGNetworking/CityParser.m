@@ -11,7 +11,7 @@
 
 @implementation CityParser
 
-- (NSError *)validate:(id)response {
++ (NSError *)validate:(id)response {
     int code = [response[@"ProResult"] intValue];
     if (code == 0) {
         return nil;
@@ -21,11 +21,11 @@
     }
 }
 
-- (id)getContent:(id)response {
++ (id)getContent:(id)response {
     return response[@"Msg"];
 }
 
-- (Class)modelClass {
++ (Class)modelClass {
     return [CityModel class];
 }
 

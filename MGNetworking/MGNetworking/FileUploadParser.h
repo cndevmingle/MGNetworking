@@ -11,7 +11,7 @@
 
 @interface FileUploadParser : NSObject<MGResponseParseDelegate>
 
-- (NSError *)validate:(id)response;
-- (id)getContent:(id)response;
++ (NSError *)validate:(id)response;
++ (id)getContent:(id)response;
 
 @end

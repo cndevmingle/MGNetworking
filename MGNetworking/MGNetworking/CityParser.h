@@ -11,8 +11,8 @@
 
 @interface CityParser : NSObject <MGResponseParseDelegate>
 
-- (NSError *)validate:(id)response;
-- (id)getContent:(id)response;
-//- (Class)modelClass;
++ (NSError *)validate:(id)response;
++ (id)getContent:(id)response;
+//+ (Class)modelClass;
 
 @end

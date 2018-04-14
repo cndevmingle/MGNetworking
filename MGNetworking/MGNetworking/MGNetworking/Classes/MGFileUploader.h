@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
                      params:(nullable id)params
                       files:(nonnull NSArray<id<MGFileUploadDelegate>> *)files
                        flag:(nullable NSString *)flag
-             responseParser:(nullable id<MGResponseParseDelegate>)parser
+             responseParser:(nullable Class<MGResponseParseDelegate>)parser
                    progress:(nullable void (^)(NSProgress * _Nonnull progress, NSString * _Nullable flag))progress
                     success:(nullable void (^)(id _Nullable responseObject, NSString * _Nullable flag))success
                     failure:(nullable void (^)(NSError *error, BOOL isCancel, NSString * _Nullable flag))failure;

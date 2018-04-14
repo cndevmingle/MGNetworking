@@ -76,7 +76,7 @@
 
 - (void)downloadWithURLString:(NSString * _Nonnull)urlString
                downloadPolicy:(MGFileDownloadPolicy)downloadPolicy
-               responseParser:(nullable id<MGResponseParseDelegate>)parser
+               responseParser:(nullable Class<MGResponseParseDelegate>)parser
                      progress:(nullable void(^)(NSProgress * _Nullable, MGDownloadFile * _Nonnull))progress
                       success:(nullable void(^)(MGDownloadFile *, id _Nullable response))success
                       failure:(nullable void(^)(NSError *, BOOL isCancel))failure {

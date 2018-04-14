@@ -58,7 +58,7 @@
                      params:(nullable id)params
                       files:(nonnull NSArray<id<MGFileUploadDelegate>> *)files
                        flag:(nullable NSString *)flag
-             responseParser:(nullable id<MGResponseParseDelegate>)parser
+             responseParser:(nullable Class<MGResponseParseDelegate>)parser
                    progress:(nullable void (^)(NSProgress * _Nonnull progress, NSString * _Nullable flag))progress
                     success:(nullable void (^)(id responseObject, NSString * _Nullable flag))success
                     failure:(nullable void (^)(NSError *error, BOOL isCancel, NSString * _Nullable flag))failure {
@@ -96,11 +96,11 @@
             id result = nil;
             if ([parser respondsToSelector:@selector(modelClass)]) {
                 if ([content isKindOfClass:[NSArray class]]) {
-                    result = [parser.modelClass mj_objectArrayWithKeyValuesArray:content];
+                    result = [[parser modelClass] mj_objectArrayWithKeyValuesArray:content];
                 } else if ([content isKindOfClass:[NSDictionary class]]) {
-                    result = [parser.modelClass mj_objectWithKeyValues:content];
+                    result = [[parser modelClass] mj_objectWithKeyValues:content];
                 } else if ([content isKindOfClass:[NSString class]] || [content isKindOfClass:[NSData class]]) {
-                    result = [parser.modelClass mj_objectWithKeyValues:[content mj_JSONObject]];
+                    result = [[parser modelClass] mj_objectWithKeyValues:[content mj_JSONObject]];
                 } else {
                     result = content;
                 }

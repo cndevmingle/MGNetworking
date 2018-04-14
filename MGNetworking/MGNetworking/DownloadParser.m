@@ -10,11 +10,11 @@
 
 @implementation DownloadParser
 
-- (NSError *)validate:(id)response {
++ (NSError *)validate:(id)response {
     return nil;
 }
 
-- (id)getContent:(id)response {
++ (id)getContent:(id)response {
     return response;
 }
 

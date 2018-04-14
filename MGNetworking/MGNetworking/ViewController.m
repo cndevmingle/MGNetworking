@@ -46,7 +46,7 @@
         //    sn = YUNXIAOWEI;
         NSDictionary *params;
         params = @{@"sign":@"pt2S5p2Z7VnjrNwFIW7V7neo+ZFXauqZ78ApP9n97QEysoAr14n+xLydwl9f3DyI", @"sn":@"YUNXIAOWEI"};
-        [MGHTTPSessionManager postWithURLString:api params:params cachePolicy:MGNetworkingCahchePolicyAppend responseParser:[CityParser new] success:^(id responseObj, bool isCache) {
+        [MGHTTPSessionManager postWithURLString:api params:params cachePolicy:MGNetworkingCahchePolicyAppend responseParser:CityParser.class success:^(id responseObj, bool isCache) {
             NSLog(@"%@ : %@", isCache?@"缓存数据":@"后端数据", [CityModel mj_keyValuesArrayWithObjectArray:responseObj]);
             NSString *text = [NSString stringWithFormat:@"%@\n%@\n\n%@", isCache?@"缓存数据：":@"后端数据：", [CityModel mj_keyValuesArrayWithObjectArray:responseObj], weakSelf.textView.text];
             weakSelf.textView.text = text;
@@ -62,7 +62,7 @@
         uploader.responseContentType = [NSSet setWithObjects:@"text/html", nil];
         uploader.showErrCode = YES;
         uploader.needCancelCallback = YES;
-        [uploader uploadWithURLString:@"http://125.65.108.22:8080/fileUpload/upload3" params:nil files:@[[File new]] flag:@"flag1" responseParser:[FileUploadParser new] progress:^(NSProgress * _Nonnull progress, NSString *flag) {
+        [uploader uploadWithURLString:@"http://125.65.108.22:8080/fileUpload/upload3" params:nil files:@[[File new]] flag:@"flag1" responseParser:[FileUploadParser class] progress:^(NSProgress * _Nonnull progress, NSString *flag) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 weakSelf.textView.text = [NSString stringWithFormat:@"progress:%.3lf\n%@", progress.completedUnitCount*1.0/progress.totalUnitCount, weakSelf.textView.text];
             });
@@ -81,10 +81,9 @@
     __weak typeof(self) weakSelf = self;
     NSString *urlStr = @"http://dldir1.qq.com/qqfile/QQforMac/QQ_V5.4.0.dmg";
 //    urlStr = @"http://b.hiphotos.baidu.com/image/pic/item/00e93901213fb80ebacae5ae3ad12f2eb93894b4.jpg";
-    [[MGFileDownloader shareInstance] downloadWithURLString:urlStr downloadPolicy:MGFileDownloadPolicyResume responseParser:[DownloadParser new] progress:^(NSProgress * _Nullable progress, MGDownloadFile * _Nonnull file) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.textView.text = [NSString stringWithFormat:@"progress:%.3lf\n%@", file.downloadLength*1.0/file.totalLenth, weakSelf.textView.text];
-        });
+    [[MGFileDownloader shareInstance] downloadWithURLString:urlStr downloadPolicy:MGFileDownloadPolicyResume responseParser:[DownloadParser class] progress:^(NSProgress * _Nullable progress, MGDownloadFile * _Nonnull file) {
+        NSString *text = [NSString stringWithFormat:@"progress:%.3lf\n%@", file.downloadLength*1.0/file.totalLenth, weakSelf.textView.text];
+        [weakSelf.textView performSelectorOnMainThread:@selector(setText:) withObject:text waitUntilDone:YES];
     } success:^(MGDownloadFile *file, id  _Nullable response) {
         weakSelf.textView.text = [NSString stringWithFormat:@"fileSavePath:%@\n\n%@",file.savePath, weakSelf.textView.text];
     } failure:^(NSError *error, BOOL isCancel) {

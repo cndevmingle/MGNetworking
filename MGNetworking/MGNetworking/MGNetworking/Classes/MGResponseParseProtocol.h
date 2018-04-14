@@ -18,7 +18,7 @@
  @param response 返回数据
  @return 错误信息，如果为空就说明没有错误，数据是正确的
  */
-- (NSError *)validate:(id)response;
++ (NSError *)validate:(id)response;
 
 @optional
 
@@ -28,13 +28,13 @@
  @param response 返回数据
  @return 内容
  */
-- (id)getContent:(id)response;
++ (id)getContent:(id)response;
 
 /**
  内容模型的类
  
  @return 模型类
  */
-- (Class)modelClass;
++ (Class)modelClass;
 
 @end

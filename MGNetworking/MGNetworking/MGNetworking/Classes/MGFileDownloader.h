@@ -46,7 +46,7 @@ typedef NS_ENUM(NSUInteger, MGFileDownloadPolicy) {
  */
 - (void)downloadWithURLString:(NSString * _Nonnull)urlString
                downloadPolicy:(MGFileDownloadPolicy)downloadPolicy
-               responseParser:(nullable id<MGResponseParseDelegate>)parser
+               responseParser:(nullable Class<MGResponseParseDelegate>)parser
                      progress:(nullable void(^)(NSProgress * _Nullable progress, MGDownloadFile * _Nonnull fileObj))progress
                       success:(nullable void(^)(MGDownloadFile *file, id _Nullable response))success
                       failure:(nullable void(^)(NSError *error, BOOL isCancel))failure;

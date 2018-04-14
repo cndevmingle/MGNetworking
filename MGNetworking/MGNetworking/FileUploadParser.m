@@ -10,7 +10,7 @@
 
 @implementation FileUploadParser
 
-- (NSError *)validate:(id)response {
++ (NSError *)validate:(id)response {
     NSInteger code = [response[@"code"] integerValue];
     if (code == 200) {
         return nil;
@@ -19,7 +19,7 @@
     return err;
 }
 
-- (id)getContent:(id)response {
++ (id)getContent:(id)response {
     return response[@"path"];
 }
 
