@@ -94,7 +94,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 
 - (AFHTTPSessionManager *)defaultManager {
     if (!_defaultManager) {
-        _defaultManager = [MGHTTPSessionManager createHttpSessionManager];
+        _defaultManager = [self createHttpSessionManager];
     }
     return _defaultManager;
 }
@@ -103,23 +103,14 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
     block([MGHTTPSessionManager shareInstance].defaultManager);
 }
 
-+ (AFHTTPSessionManager *)createHttpSessionManager {
-    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:[MGHTTPSessionManager shareInstance].baseURLString?[NSURL URLWithString:[MGHTTPSessionManager shareInstance].baseURLString]:nil];
-    manager.requestSerializer.timeoutInterval = [MGHTTPSessionManager shareInstance].timeout;
-    manager.requestSerializer = [AFJSONRequestSerializer serializer];
-    AFJSONResponseSerializer *jsonRS = [AFJSONResponseSerializer serializer];
-    jsonRS.removesKeysWithNullValues = YES;
-    jsonRS.acceptableContentTypes = [MGHTTPSessionManager shareInstance].responseContentType;
-    manager.responseSerializer = jsonRS;
+- (AFHTTPSessionManager *)createHttpSessionManager {
+    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:_baseURLString?[NSURL URLWithString:_baseURLString]:nil];
     return manager;
-}
-
-+ (void)setTimeout:(NSTimeInterval)timeout {
-    [MGHTTPSessionManager shareInstance].timeout = timeout;
 }
 
 + (void)setBaseURLString:(NSString *)baseURLString {
     [MGHTTPSessionManager shareInstance].baseURLString = baseURLString;
+    [[MGHTTPSessionManager shareInstance] updateHTTPManager];
 }
 
 + (void)showErrorCode:(BOOL)showErrCode {
@@ -128,10 +119,6 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 
 + (void)needCancelCallback:(BOOL)need {
     [MGHTTPSessionManager shareInstance].needCancelCallback = need;
-}
-
-+ (void)setResponseContentTypes:(NSSet<NSString *> *)contentTypes {
-    [MGHTTPSessionManager shareInstance].responseContentType = contentTypes;
 }
 
 + (void)postWithURLString:(NSString *)urlString
@@ -286,15 +273,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
  */
 - (void)setBaseURLString:(NSString *)baseURLString {
     _baseURLString = baseURLString;
-}
-
-/**
- 设置超时时间，默认20s
- 
- @param timeout 时间
- */
-- (void)setTimeout:(NSTimeInterval)timeout {
-    _timeout = timeout;
+    [self updateHTTPManager];
 }
 
 - (void)showErrorCode:(BOOL)showErrCode {
@@ -305,11 +284,12 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
     _needCancelCallback = need;
 }
 
-/**
- 设置返回数据接收类型
- */
-- (void)setResponseContentTypes:(NSSet<NSString *> *)contentTypes {
-    _responseContentType = contentTypes;
+- (void)updateHTTPManager {
+    AFHTTPRequestSerializer *requestSer = self.defaultManager.requestSerializer;
+    AFHTTPResponseSerializer *responseSer = self.defaultManager.responseSerializer;
+    self.defaultManager = nil;
+    self.defaultManager.requestSerializer = requestSer;
+    self.defaultManager.responseSerializer = responseSer;
 }
 
 /**

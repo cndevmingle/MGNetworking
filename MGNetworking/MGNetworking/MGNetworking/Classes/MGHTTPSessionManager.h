@@ -41,18 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)setBaseURLString:(nullable NSString *)baseURLString;
 
 /**
- 设置超时时间，默认20s
-
- @param timeout 时间
- */
-+ (void)setTimeout:(NSTimeInterval)timeout;
-
-/**
- 设置返回数据接收类型
- */
-+ (void)setResponseContentTypes:(nullable NSSet<NSString *> *)contentTypes;
-
-/**
  在错误信息后面显示错误码
 
  @param showErrCode 是否显示
@@ -150,18 +138,6 @@ NS_ASSUME_NONNULL_BEGIN
  @param baseURLString 服务器接口地址
  */
 - (void)setBaseURLString:(nullable NSString *)baseURLString;
-
-/**
- 设置超时时间，默认20s
- 
- @param timeout 时间
- */
-- (void)setTimeout:(NSTimeInterval)timeout;
-
-/**
- 设置返回数据接收类型
- */
-- (void)setResponseContentTypes:(nullable NSSet<NSString *> *)contentTypes;
 
 /**
  在错误信息后面显示错误码
