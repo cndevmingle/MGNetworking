@@ -16,7 +16,7 @@
 @interface MGFileUploader ()
 
 /**网络请求对象*/
-@property (nonatomic, strong) AFHTTPSessionManager *uploaderManager;
+@property (nonatomic, strong, readwrite) AFHTTPSessionManager *uploaderManager;
 /**上传任务*/
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSURLSessionTask *> *taskDictionary;
 

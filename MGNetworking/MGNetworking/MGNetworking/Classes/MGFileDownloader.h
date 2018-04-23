@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AFNetworking/AFNetworking.h>
 #import "MGDownloadFile.h"
 #import "MGResponseParseProtocol.h"
 
@@ -23,6 +24,9 @@ typedef NS_ENUM(NSUInteger, MGFileDownloadPolicy) {
  文件下载器
  */
 @interface MGFileDownloader : NSObject
+
+/**下载会话管理*/
+@property (nonatomic, strong, readonly) AFURLSessionManager *sessionManager;
 
 /**是否显示错误码*/
 @property (nonatomic, assign) BOOL showErrorCode;

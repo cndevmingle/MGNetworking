@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AFNetworking/AFNetworking.h>
 #import "MGResponseParseProtocol.h"
 
 typedef NS_ENUM(NSUInteger, MGNetworkingCahchePolicy) {
@@ -29,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 // ***********************************************************************************************
 //                                              类方法
 // ***********************************************************************************************
+
++ (void)configHTTPSessionManager:(void(^)(AFHTTPSessionManager *manager))block;
 
 /**
  设置baseURL，后面调用接口时就不用再加服务器地址，可以不设置，但是调用接口时必须拼上服务器地址
@@ -138,6 +141,8 @@ NS_ASSUME_NONNULL_BEGIN
 // ***********************************************************************************************
 //                                              实例方法
 // ***********************************************************************************************
+
+- (void)configHTTPSessionManager:(void(^)(AFHTTPSessionManager *manager))block;
 
 /**
  设置baseURL，后面调用接口时就不用再加服务器地址，可以不设置，但是调用接口时必须拼上服务器地址

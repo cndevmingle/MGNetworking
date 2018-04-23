@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AFNetworking/AFNetworking.h>
 #import "MGFileUploadProtocol.h"
 #import "MGResponseParseProtocol.h"
 
@@ -16,6 +17,8 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface MGFileUploader : NSObject
 
+/**网络请求对象*/
+@property (nonatomic, strong, readonly) AFHTTPSessionManager *uploaderManager;
 /**设置响应的contentType*/
 @property (nonatomic, strong, nonnull) NSSet<NSString *> *responseContentType;
 /**显示错误码*/

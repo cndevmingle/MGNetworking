@@ -15,7 +15,7 @@
 @interface MGFileDownloader ()
 
 /**下载会话管理*/
-@property (nonatomic, strong) AFURLSessionManager *sessionManager;
+@property (nonatomic, strong, readwrite) AFURLSessionManager *sessionManager;
 /**下载任务*/
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSURLSessionDataTask *> *taskDictionary;
 /**下载中的文件*/

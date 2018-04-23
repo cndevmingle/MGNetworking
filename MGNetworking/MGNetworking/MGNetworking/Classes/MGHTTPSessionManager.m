@@ -9,7 +9,6 @@
 #import "MGHTTPSessionManager.h"
 #import "MGNetworkingTool.h"
 #import "MGNetworkingErrorExplainer.h"
-#import <AFNetworking/AFNetworking.h>
 #import <YTKKeyValueStore/YTKKeyValueStore.h>
 #import <MJExtension/MJExtension.h>
 
@@ -20,6 +19,8 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 
 @interface MGHTTPSessionManager ()
 
+/**默认网络请求*/
+@property (nonatomic, strong, readwrite) AFHTTPSessionManager *defaultManager;
 /**任务字典*/
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSURLSessionTask *> *taskDictionary;
 /**超时时间*/
@@ -91,9 +92,21 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
     return cacheDirPath;
 }
 
+- (AFHTTPSessionManager *)defaultManager {
+    if (!_defaultManager) {
+        _defaultManager = [MGHTTPSessionManager createHttpSessionManager];
+    }
+    return _defaultManager;
+}
+
++ (void)configHTTPSessionManager:(void (^)(AFHTTPSessionManager * _Nonnull))block {
+    block([MGHTTPSessionManager shareInstance].defaultManager);
+}
+
 + (AFHTTPSessionManager *)createHttpSessionManager {
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:[MGHTTPSessionManager shareInstance].baseURLString?[NSURL URLWithString:[MGHTTPSessionManager shareInstance].baseURLString]:nil];
     manager.requestSerializer.timeoutInterval = [MGHTTPSessionManager shareInstance].timeout;
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
     AFJSONResponseSerializer *jsonRS = [AFJSONResponseSerializer serializer];
     jsonRS.removesKeysWithNullValues = YES;
     jsonRS.acceptableContentTypes = [MGHTTPSessionManager shareInstance].responseContentType;
@@ -240,7 +253,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
         }
         [weakSelf.taskDictionary  removeObjectForKey:cacheTableName];
     };
-    AFHTTPSessionManager *manager = [MGHTTPSessionManager createHttpSessionManager];
+    AFHTTPSessionManager *manager = self.defaultManager;
     NSURLSessionTask *task;
     if (method == MGNetworkingPost) {
         task = [manager POST:urlString parameters:params progress:nil success:requestSuccessBlock failure:failureBlock];
@@ -262,6 +275,10 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 }
 
 #pragma mark - 实例方法
+- (void)configHTTPSessionManager:(void (^)(AFHTTPSessionManager * _Nonnull))block {
+    block(self.defaultManager);
+}
+
 /**
  设置baseURL，后面调用接口时就不用再加服务器地址，可以不设置，但是调用接口时必须拼上服务器地址
  
