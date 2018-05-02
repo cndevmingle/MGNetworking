@@ -371,9 +371,25 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
             id subItems = [item.itemObject mj_JSONObject];
             if ([subItems isKindOfClass:[NSArray class]]) {
                 for (NSString *itemString in subItems) {
-                    NSArray *modelArr = [modelClass?:[NSArray class] mj_objectArrayWithKeyValuesArray:[itemString mj_JSONObject]];
-                    if (modelArr) {
-                        [cacheContentArr addObjectsFromArray:modelArr];
+                    id jsonObj = itemString.mj_JSONObject;
+                    if ([jsonObj isKindOfClass:[NSArray class]]) {
+                        NSArray *modelArr = [modelClass?:[NSArray class] mj_objectArrayWithKeyValuesArray:jsonObj];
+                        if (modelArr) {
+                            [cacheContentArr addObjectsFromArray:modelArr];
+                        } else {
+#if DEBUG
+                            NSLog(@"%@ 与缓存数据不匹配", NSStringFromClass(modelClass));
+#endif
+                        }
+                    } else if ([jsonObj isKindOfClass:[NSDictionary class]]) {
+                        id model = modelClass?[modelClass mj_objectWithKeyValues:jsonObj]:nil;
+                        if (model) {
+                            [cacheContentArr addObject:model];
+                        } else {
+#if DEBUG
+                            NSLog(@"%@ 与缓存数据不匹配", NSStringFromClass(modelClass));
+#endif
+                        }
                     } else {
 #if DEBUG
                         NSLog(@"%@ 与缓存数据不匹配", NSStringFromClass(modelClass));
