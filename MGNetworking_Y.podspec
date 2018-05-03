@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "MGNetworking_Y"
-  s.version      = "0.2.1"
+  s.version      = "0.2.2"
   s.summary      = "基于AFNetworking封装的网络库，涵盖基本的POST/GET请求，文件上传和下载。"
 
   # This description is used to generate tags and improve search results.

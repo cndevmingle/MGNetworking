@@ -124,7 +124,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 + (void)postWithURLString:(NSString *)urlString
                    params:(id)params
               cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
-        responseParser:(Class<MGResponseParseDelegate>)parser
+           responseParser:(Class<MGResponseParseDelegate>)parser
                   success:(void (^)(id, bool))success
                   failure:(void (^)(NSError *, BOOL))failure {
     [[MGHTTPSessionManager shareInstance] requestWithURLString:urlString params:params method:MGNetworkingPost cachePolicy:cachePolicy responseParser:parser success:success failure:failure];
@@ -144,12 +144,12 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 
 #pragma mark - 核心请求方法
 - (void)requestWithURLString:(nonnull NSString *)urlString
-                   params:(nullable id)params
+                      params:(nullable id)params
                       method:(MGNetworkingMethod)method
-              cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
-        responseParser:(nullable Class<MGResponseParseDelegate>)parser
-                  success:(nullable void (^)(id responseObj, bool isCache))success
-                  failure:(nullable void (^)(NSError *error, BOOL isCancel))failure {
+                 cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
+              responseParser:(nullable Class<MGResponseParseDelegate>)parser
+                     success:(nullable void (^)(id responseObj, bool isCache))success
+                     failure:(nullable void (^)(NSError *error, BOOL isCancel))failure {
     // 创建缓存表
     NSString *cacheTableName = [MGNetworkingTool tableNameWithString:urlString];
     NSString *cacheId = [MGNetworkingTool md5WithString:[params mj_JSONString]];
@@ -158,7 +158,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
     }
     
     // 查询缓存并返回
-    id cache = [[MGHTTPSessionManager shareInstance] cacheInTable:cacheTableName modelClass:[parser respondsToSelector:@selector(modelClass)]?[parser modelClass]:nil];
+    id cache = [self cacheInTable:cacheTableName key:cacheId modelClass:[parser respondsToSelector:@selector(modelClass)]?[parser modelClass]:nil];
     if (cache) {
         if (success) {
             success(cache, YES);
@@ -224,7 +224,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
                     break;
             }
             if (needCache) {
-                [MGHTTPSessionManager cacheContent:content cacheId:cacheId inTable:cacheTableName];
+                [self cacheContent:content cacheId:cacheId inTable:cacheTableName];
             }
             
         }
@@ -320,7 +320,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 - (void)postWithURLString:(nonnull NSString *)urlString
                    params:(nullable id)params
               cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
-        responseParser:(nullable Class<MGResponseParseDelegate>)parser
+           responseParser:(nullable Class<MGResponseParseDelegate>)parser
                   success:(nullable void (^)(id responseObj, bool isCache))success
                   failure:(nullable void (^)(NSError *error, BOOL isCancel))failure {
     [self requestWithURLString:urlString params:params method:MGNetworkingPost cachePolicy:cachePolicy responseParser:parser success:success failure:failure];
@@ -354,65 +354,40 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 - (void)getWithURLString:(nonnull NSString *)urlString
                   params:(nullable id)params
              cachePolicy:(MGNetworkingCahchePolicy)cachePolicy
-       responseParser:(nullable Class<MGResponseParseDelegate>)parser
+          responseParser:(nullable Class<MGResponseParseDelegate>)parser
                  success:(nullable void (^)(id responseObj, bool isCache))success
                  failure:(nullable void (^)(NSError *error, BOOL isCancel))failure {
     [self requestWithURLString:urlString params:params method:MGNetworkingGet cachePolicy:cachePolicy responseParser:parser success:success failure:failure];
 }
 
 #pragma mark - 查询缓存
-- (id)cacheInTable:(NSString *)table modelClass:(Class)modelClass {
-    NSArray<YTKKeyValueItem *> *cacheArr = [[MGHTTPSessionManager shareInstance].store getAllItemsFromTable:table];
-    if (cacheArr.count == 0) {
+- (id)cacheInTable:(NSString *)table key:(NSString *)key modelClass:(Class)modelClass {
+    // YTKKeyValueStore会自动将缓存对象编程array，所以我们只需要取一个就行了
+    NSString *cacheStr = [[self.store getObjectById:key fromTable:table] lastObject];
+    if (cacheStr) {
+        id jsonObj = [cacheStr mj_JSONObject];
+        if ([jsonObj isKindOfClass:[NSArray class]]) {
+            if (modelClass) {
+                return [modelClass mj_objectArrayWithKeyValuesArray:jsonObj];
+            } else {
+                return jsonObj;
+            }
+        } else if ([jsonObj isKindOfClass:[NSDictionary class]]) {
+            if (modelClass) {
+                return [modelClass mj_objectWithKeyValues:jsonObj];
+            } else {
+                return jsonObj;
+            }
+        } else {
+            return cacheStr;
+        }
+    } else {
         return nil;
     }
-    NSMutableArray *cacheContentArr = [NSMutableArray arrayWithCapacity:cacheArr.count];
-    for (YTKKeyValueItem *item in cacheArr) {
-            id subItems = [item.itemObject mj_JSONObject];
-            if ([subItems isKindOfClass:[NSArray class]]) {
-                for (NSString *itemString in subItems) {
-                    id jsonObj = itemString.mj_JSONObject;
-                    if ([jsonObj isKindOfClass:[NSArray class]]) {
-                        NSArray *modelArr = [modelClass?:[NSArray class] mj_objectArrayWithKeyValuesArray:jsonObj];
-                        if (modelArr) {
-                            [cacheContentArr addObjectsFromArray:modelArr];
-                        } else {
-#if DEBUG
-                            NSLog(@"%@ 与缓存数据不匹配", NSStringFromClass(modelClass));
-#endif
-                        }
-                    } else if ([jsonObj isKindOfClass:[NSDictionary class]]) {
-                        id model = modelClass?[modelClass mj_objectWithKeyValues:jsonObj]:nil;
-                        if (model) {
-                            [cacheContentArr addObject:model];
-                        } else {
-#if DEBUG
-                            NSLog(@"%@ 与缓存数据不匹配", NSStringFromClass(modelClass));
-#endif
-                        }
-                    } else {
-#if DEBUG
-                        NSLog(@"%@ 与缓存数据不匹配", NSStringFromClass(modelClass));
-#endif
-                    }
-                }
-            } else {
-                
-                id model = [modelClass?:[NSArray class] mj_objectArrayWithKeyValuesArray:[item.itemObject mj_JSONObject]];
-                if (model) {
-                    [cacheContentArr addObjectsFromArray:model];
-                } else {
-#if DEBUG
-                    NSLog(@"%@ 与缓存数据不匹配", NSStringFromClass(modelClass));
-#endif
-                }
-            }
-    }
-    return cacheContentArr;
 }
 
 #pragma mark - 缓存数据
-+ (void)cacheContent:(id)content cacheId:(NSString *)cacheId inTable:(NSString *)table {
+- (void)cacheContent:(id)content cacheId:(NSString *)cacheId inTable:(NSString *)table {
     [[MGHTTPSessionManager shareInstance].store putString:[content mj_JSONString] withId:cacheId intoTable:table];
 }
 
