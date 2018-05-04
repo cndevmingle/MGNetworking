@@ -154,7 +154,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
     NSString *cacheTableName = [MGNetworkingTool tableNameWithString:urlString];
     NSString *cacheId = [MGNetworkingTool md5WithString:[params mj_JSONString]];
     if (cachePolicy != MGNetworkingCahchePolicyNone && urlString) {
-        [[MGHTTPSessionManager shareInstance].store createTableWithName:cacheTableName];
+        [self.store createTableWithName:cacheTableName];
     }
     
     // 查询缓存并返回
@@ -211,7 +211,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
             switch (cachePolicy) {
                 case MGNetworkingCahchePolicyRefresh:
                     // 刷新缓存，删除旧缓存数据
-                    [[MGHTTPSessionManager shareInstance].store clearTable:cacheTableName];
+                    [self.store deleteObjectById:cacheId fromTable:cacheTableName];
                     needCache = YES;
                     break;
                 case MGNetworkingCahchePolicyAppend:
@@ -388,7 +388,7 @@ typedef NS_ENUM(NSUInteger, MGNetworkingMethod) {
 
 #pragma mark - 缓存数据
 - (void)cacheContent:(id)content cacheId:(NSString *)cacheId inTable:(NSString *)table {
-    [[MGHTTPSessionManager shareInstance].store putString:[content mj_JSONString] withId:cacheId intoTable:table];
+    [self.store putString:[content mj_JSONString] withId:cacheId intoTable:table];
 }
 
 @end
